@@ -1,7 +1,7 @@
 # Order Graphs Remote App
 
 This is a React based Remote App that makes use of the Liferay Headless APIs to fecth the commerce orders and it can create 3 different graphs related to orders.
-The React Remote App uses the react-chartjs-2 library to build the graphs using the orders information fetched using the */o/headless-commerce-admin-order/v1.0/orders* Headless endpoint.
+The React Remote App uses the [react-chartjs-2](https://react-chartjs-2.js.org/) library to build the graphs using the orders information fetched using the */o/headless-commerce-admin-order/v1.0/orders* Headless endpoint.
 
 The Remote App has 3 different routes to select which graph you want to display in every instance of the Remote App:
 - **number-of-orders-and-amount** : This is the default route. It displays a Line chart that shows the number of orders and total amount per month
@@ -41,7 +41,9 @@ For demo purposes you can host the applicationâ€™s static resources in Liferayâ€
 
 Once saved, Liferay creates a widget named Order Graphs, which you can deploy to Site Pages like other Page widgets. This widget appears under the selected Portlet Category Name.
 
-When adding a Orders Graph to a page, you can set which route (graph) you want to display. After dragging and dropping the widget on a page, click on the widget Configura tion and write the route you want to use. Like this:
+When adding a Orders Graph to a page, you can set which route (graph) you want to display. After dragging and dropping the widget on a page, click on the widget Configuration and write the route you want to use. The widget is instanciable, so you can use more than one in a single page.
+Like this:
+
   
 ![order-graphs-configuration](https://user-images.githubusercontent.com/19341713/173587991-64a31a05-38f4-45af-a64b-fe2d637ab27b.png)
 
