@@ -8,6 +8,8 @@ The Remote App has 3 different routes to select which graph you want to display 
 -  **orders-status** : This displays a Doughnout chart with a breakdown of orders per status (open, pending, processed, shipped, completed)
 -  **orders-amount** : This displays a Bar chart that shows the total amount per month.
 
+Admin users will see all orders, while Customer users will see only their orders.
+
 # Getting Started with Order Graphs Remote App
 
 This project was bootstrapped with [ using Liferay’s create_remote_app.sh script]([https://github.com/facebook/create-react-app](https://learn.liferay.com/dxp/latest/en/building-applications/remote-apps/remote-apps-tutorials/creating-a-basic-remote-app.html)).
