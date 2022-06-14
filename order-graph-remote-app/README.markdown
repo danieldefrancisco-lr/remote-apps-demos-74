@@ -12,7 +12,7 @@ Admin users will see all orders, while Customer users will see only their orders
 
 # Getting Started with Order Graphs Remote App
 
-This project was bootstrapped with [ using Liferay’s create_remote_app.sh script]([https://github.com/facebook/create-react-app](https://learn.liferay.com/dxp/latest/en/building-applications/remote-apps/remote-apps-tutorials/creating-a-basic-remote-app.html)).
+This project was bootstrapped with using Liferay’s create_remote_app.sh script as explained [here](https://learn.liferay.com/dxp/latest/en/building-applications/remote-apps/remote-apps-tutorials/creating-a-basic-remote-app.html)
 
 ## Building the React Application
 
