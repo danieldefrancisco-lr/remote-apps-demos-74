@@ -26,7 +26,8 @@ Before proceeding, confirm the code has compiled successfully and take note of t
 
 ### Hosting the Application Files
 
-For demo purposes you can host the application’s static resources in Liferay’s Document Library
+For demo purposes you can host the application’s static resources in Liferay’s Document Library.
+For that, upload the js file in *./build/static/js* and the css file in *./build/static/css* into a folder in the Document Library.
 
 
 ### Registering the Application with Remote Apps
