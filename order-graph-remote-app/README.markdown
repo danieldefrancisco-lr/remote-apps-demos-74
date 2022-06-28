@@ -1,70 +1,65 @@
-# Getting Started with Create React App
+# Order Graphs Remote App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a React based Remote App that makes use of the Liferay Headless APIs to fecth the commerce orders and it can create 3 different graphs related to orders.
+The React Remote App uses the [react-chartjs-2](https://react-chartjs-2.js.org/) library to build the graphs using the orders information fetched using the */o/headless-commerce-admin-order/v1.0/orders* Headless endpoint.
 
-## Available Scripts
+The Remote App has 3 different routes to select which graph you want to display in every instance of the Remote App:
+- **number-of-orders-and-amount** : This is the default route. It displays a Line chart that shows the number of orders and total amount per month
+-  **orders-status** : This displays a Doughnout chart with a breakdown of orders per status (open, pending, processed, shipped, completed)
+-  **orders-amount** : This displays a Bar chart that shows the total amount per month.
 
-In the project directory, you can run:
+Admin users will see all orders, while Customer users will see only their orders.
 
-### `yarn start`
+# Getting Started with Order Graphs Remote App
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+This project was bootstrapped with using Liferay’s create_remote_app.sh script as explained [here](https://learn.liferay.com/dxp/latest/en/building-applications/remote-apps/remote-apps-tutorials/creating-a-basic-remote-app.html)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Building the React Application
 
 ### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This command creates an optimized production build, which includes the .js and .css files necessary for running the application inside the **./build/static/** folder.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Before proceeding, confirm the code has compiled successfully and take note of the application’s .js and .css files.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Creating the Remote App in Liferay DXP
 
-### `yarn eject`
+### Hosting the Application Files
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+For demo purposes you can host the application’s static resources in Liferay’s Document Library.
+For that, upload the js file in *./build/static/js* and the css file in *./build/static/css* into a folder in the Document Library.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Registering the Application with Remote Apps
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Open the Global Menu, click the Applications tab, and go to Remote Apps
+2. Click the Add button
+3. Enter these values:
+  - **Name**: Order Graphs
+  - **Type**: Custom Element
+  - **HTML Element Name**: order-graph-remote-app
+  - **URL** : <WebDAV URL for the .js file>
+  - **CSS URL**: <WebDAV URL for the .css file>
+  - **Portlet Category Name**: Remote Apps
 
-## Learn More
+Once saved, Liferay creates a widget named Order Graphs, which you can deploy to Site Pages like other Page widgets. This widget appears under the selected Portlet Category Name.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+When adding a Orders Graph to a page, you can set which route (graph) you want to display. After dragging and dropping the widget on a page, click on the widget Configuration and write the route you want to use. The widget is instanciable, so you can use more than one in a single page.
+Like this:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  
+![order-graphs-configuration](https://user-images.githubusercontent.com/19341713/173587991-64a31a05-38f4-45af-a64b-fe2d637ab27b.png)
 
-### Code Splitting
+  
+  
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Screenshots
+![order-graphs-1](https://user-images.githubusercontent.com/19341713/173587503-966ec46f-46a8-4e55-8efc-ab65bebede3e.png)
 
-### Analyzing the Bundle Size
+ ![order-graphs-2](https://user-images.githubusercontent.com/19341713/173587527-3fc170f0-69fb-41b4-96ed-1050a72fb8b9.png)
+  
+  
+![order-graphs-3](https://user-images.githubusercontent.com/19341713/173587553-89cefb7f-4342-4d8c-bfe0-79a2fafc988e.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+  
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
