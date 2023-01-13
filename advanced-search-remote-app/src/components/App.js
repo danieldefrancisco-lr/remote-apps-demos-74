@@ -30,7 +30,7 @@ function App() {
 	
 
 	const fetchDocuments = () => {
-		let url = "/o/c/engopdocuments/scopes/45907";
+		let url = "/o/c/engopdocuments/scopes/"+Liferay.ThemeDisplay.getSiteGroupId();
 		let queryFilter = "";
 		if (selectedAccount.length !== 0) {
 			let selectedAccountFilter = "(r_account_accountEntryId eq '"+selectedAccount+"')";
