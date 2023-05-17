@@ -13,7 +13,7 @@ import ClayDatePicker from '@clayui/date-picker';
 
 const {Liferay, themeDisplay} = window;
 
-// query: (r_account_accountEntryId eq '50217') or (startswith(aTA, 'XY')) or (alert eq true)
+
 function App() {
 	const [flights, setFlights] = useState([]);
 	const [destination, setDestination] = useState("");
@@ -43,19 +43,6 @@ function App() {
 		    .then((response) => response.json())
 		    .then((data) => setFlights(data.data));
 		}
-
-	const fetchCoverages = () => {
-		Liferay.Util.fetch("/o/headless-admin-list-type/v1.0/list-type-definitions")
-			    .then((response) => response.json())
-			    .then((data) => {
-				data.items.forEach((element) => {
-					if (element.name === "Coverage") {
-						//setCoverages(element.listTypeEntries);
-					}
-				});
-			});
-				
-			}
 	
 		useEffect(() => {
 			fetchFlights()
