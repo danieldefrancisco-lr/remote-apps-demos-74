@@ -1,0 +1,45 @@
+{
+  "name": "create-product-form",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-scripts": "5.0.1",
+    "sass": "^1.52.2",
+    "@clayui/link": "3.56.0",
+    "@clayui/css": "3.68.0",
+    "@clayui/label": "3.56.0",
+    "@clayui/icon": "3.56.0",
+    "@clayui/upper-toolbar": "3.83.1",
+    "@clayui/table": "3.56.0",
+    "@clayui/form": "3.89.0",
+    "@clayui/date-picker": "3.84.0",
+    "@clayui/slider": "3.89.0",
+    "@clayui/button": "3.83.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+h1, p {
+    font-family: Lato;
+  }
+  
+  .box{
+    background:white;
+    width: 500px;
+    border-radius:2px;
+    margin: 0 auto auto 250px;
+    padding:0px 0px 2px 0px; 
+  }
+  
+  .name, .lastName, .address, .company, .phone, .eMail, .webSite{
+    background:#ecf0f1;
+    border: #ccc 1px solid;
+    border-bottom: #ccc 2px solid;
+    padding: 8px;
+    width:250px;
+    color:#AAAAAA;
+    margin-top:5px;
+    font-size:1em;
+    border-radius:4px;
+  }
+  
+  .cardDiv {
+      width:41em;
+      height:22em;
+      color:#777;
+      background-color:#F0F0F0;
+      margin:5% auto 0 auto;
+      border-radius:0.4em;
+      border-top-right-radius:0.37em;
+      border-bottom-right-radius:0.37em;
+      box-shadow:0 0 3px rgba(0,0,0,0.15);
+      transition:box-shadow 200ms ease-in;
+  }
+  
+  .cardDiv:before{
+    content:'';
+    background:url(https://img3.goodfon.com/wallpaper/nbig/2/e0/linii-abstrakciya-fon-tochki.jpg);
+      background-position:30% 70%;
+      width:12em;
+      height:22em;
+      display:block;
+      position:absolute;
+      
+  }
+      
+  .card {
+      padding:1.6em 2em 2em 14em;
+    }
+          
+  .cardName {
+      color:#008080;
+      font-size:2.2em;
+      letter-spacing:1px;
+      }
+  
+  .cardCompanyName {
+      color:#00CED1;
+      font-size:1.2em;
+      margin-top:0.2em;
+    }
+          
+  hr {
+      height:2px;
+      background:blue;
+      margin:1em 0;
+      width:85%;
+  }
+  
+  .cardAddress, .cardPhoneNumber, .cardEmail, .cardWebsite{
+    font-family:'Ubuntu Mono',monospace;
+      margin:1em 0;
+    font-weight:700;
+    color: black;
+  }
+    
+    

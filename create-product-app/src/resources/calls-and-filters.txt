@@ -1,0 +1,6 @@
+{
+  "carRegistrationNumber" : [ { "4536hjk" }]
+}
+
+
+(id eq '161262') and (carRegistrationNumber eq '4536hjk')

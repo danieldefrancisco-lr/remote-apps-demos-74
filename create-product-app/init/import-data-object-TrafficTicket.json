@@ -1,0 +1,19 @@
+
+[
+  {
+    "amount": 100,
+    "trafficViolationAddress": "280 Castellana Street, 28046 Madrid",
+    "discountForPrepayment": 10,
+    "idTrafficTicket": "",
+    "carRegistrationNumber": "4536hjk",
+    "reasonForTrafficViolation": "Speed"
+  },
+  {
+    "amount": 500,
+    "trafficViolationAddress": "280 Castellana Street, 28046 Madrid",
+    "discountForPrepayment": 5,
+    "carRegistrationNumber": "1234opt",
+    "reasonForTrafficViolation": "Traffic Light"
+  }
+]
+
