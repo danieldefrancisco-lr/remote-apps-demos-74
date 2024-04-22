@@ -45,14 +45,11 @@ function App() {
 			  <div className="App">
 				<div className="search-wrapper">
 				<ClayUpperToolbar>
-				<ClayUpperToolbar.Item className="text-left" expand>
-        			<label className="component-title">{"Ferry"}</label>
-      			</ClayUpperToolbar.Item>
 				  <ClayUpperToolbar.Item >
 				  <ClaySelect aria-label="Select Label" id="account-select" value={selectedRoute} onChange={(a) => setSelectedRoute(a.target.value)}>
 				  <ClaySelect.Option
          					 key={""}
-         					 label={"All"}
+         					 label={"Seleccionar Trayecto"}
          					 value={""}
        					 />
 				  {routes.map(item => (
@@ -63,30 +60,31 @@ function App() {
        					 />
     			  ))}
 				  </ClaySelect>
-				  </ClayUpperToolbar.Item>	
+				  </ClayUpperToolbar.Item>
+				  <ClayUpperToolbar.Item >
 				  <ClayUpperToolbar.Input placeholder="Passengers" type="text" name="passengers-form" id="passengers-form" value={passengers} onChange={(a) => setPassengers(a.target.value)}/>
-				  
+				  </ClayUpperToolbar.Item>	
 				  <ClayUpperToolbar.Item >
 						<ClayDatePicker
       						onChange={setIssueDateFrom}
-      						placeholder="YYYY-MM-DD"
+      						placeholder="Ida (yyyy-mm-dd)"
       						spritemap={spritemap}
       						value={issueDateFrom}
       						years={{
-        						end: 2024,
-        						start: 1997
+        						end: 2026,
+        						start: 2024
       						}}
     					/>
 					</ClayUpperToolbar.Item>
 					<ClayUpperToolbar.Item >
 						<ClayDatePicker
       						onChange={setIssueDateTo}
-      						placeholder="YYYY-MM-DD"
+      						placeholder="Vuelta (yyyy-mm-dd)"
       						spritemap={spritemap}
       						value={issueDateTo}
       						years={{
-        						end: 2024,
-        						start: 1997
+        						end: 2026,
+        						start: 2024
       						}}
     					/>
 					</ClayUpperToolbar.Item>
