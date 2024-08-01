@@ -3,12 +3,17 @@
 This is a React based Remote App that makes use of the Liferay Headless APIs to fecth the commerce orders and it can create 3 different graphs related to orders.
 The React Remote App uses the [react-chartjs-2](https://react-chartjs-2.js.org/) library to build the graphs using the orders information fetched using the */o/headless-commerce-admin-order/v1.0/orders* Headless endpoint.
 
-The Remote App has 3 different routes to select which graph you want to display in every instance of the Remote App:
-- **number-of-orders-and-amount** : This is the default route. It displays a Line chart that shows the number of orders and total amount per month
--  **orders-status** : This displays a Doughnout chart with a breakdown of orders per status (open, pending, processed, shipped, completed)
+The Remote App has 5 different routes to select which graph you want to display in every instance of the Remote App:
+For Admins:
+- **number-of-orders-and-amount** : This is the default route. It displays a Line chart that shows the number of orders and total amount per month for all accounts
+-  **orders-status** : This displays a Doughnout chart with a breakdown of orders per status (open, pending, processed, shipped, completed) for all accounts
 -  **orders-amount** : This displays a Bar chart that shows the total amount per month.
+For Customers:
+- **orders-and-amount-customer** :  It displays a Line chart that shows the number of orders and total amount per month **for the selected account**
+-  **orders-status-customer** : This displays a Doughnout chart with a breakdown of orders per status (open, pending, processed, shipped, completed) **for the selected account**
 
 Admin users will see all orders, while Customer users will see only their orders.
+Depending on the page or page experience, select the route accordingly, if it is for an end-customer or for an admin/internal employee.
 
 # Getting Started with Order Graphs Remote App
 
