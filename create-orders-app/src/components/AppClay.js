@@ -1,16 +1,8 @@
 
 import React from 'react';
 import { useEffect, useState } from "react";
-import ClayTable from '@clayui/table';
-import ClayLabel from '@clayui/label';
-import ClayLink from '@clayui/link';
-import ClayIcon from '@clayui/icon';
-import ClayUpperToolbar from '@clayui/upper-toolbar';
 import {ClaySelect} from '@clayui/form';
-import {ClayCheckbox} from '@clayui/form';
-import ClayDatePicker from '@clayui/date-picker';
 import ClayForm, {ClayInput} from '@clayui/form';
-import ClaySlider from '@clayui/slider';
 import ClayButton from '@clayui/button';
 
 

@@ -1,0 +1,14 @@
+assemble:
+    - from: build/static
+      into: static
+mmr-client-extension:
+    cssURLs:
+        - css/main.*.css
+    htmlElementName: mmr-client-extension
+    instanceable: false
+    name: Model-Maker Recognition
+    portletCategoryName: category.client-extensions
+    type: customElement
+    urls:
+        - js/main.*.js
+    useESM: true

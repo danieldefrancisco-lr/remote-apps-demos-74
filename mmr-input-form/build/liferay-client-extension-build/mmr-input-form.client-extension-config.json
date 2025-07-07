@@ -1,0 +1,17 @@
+{
+  "com.liferay.client.extension.type.configuration.CETConfiguration~mmr-input-form" : {
+    ":configurator:policy" : "force",
+    "baseURL" : "${portalURL}/o/mmr-input-form",
+    "buildTimestamp" : 1730375473551,
+    "description" : "",
+    "dxp.lxc.liferay.com.virtualInstanceId" : "default",
+    "name" : "Model-Maker Input Form",
+    "projectId" : "mmrinputform",
+    "projectName" : "mmr-input-form",
+    "properties" : [ ],
+    "sourceCodeURL" : "",
+    "type" : "customElement",
+    "typeSettings" : [ "instanceable=false", "urls=js\\main.755dbcec.js", "useESM=true", "htmlElementName=mmr-input-form", "cssURLs=css\\main.27c07f35.css", "portletCategoryName=category.client-extensions" ],
+    "webContextPath" : "/mmr-input-form"
+  }
+}

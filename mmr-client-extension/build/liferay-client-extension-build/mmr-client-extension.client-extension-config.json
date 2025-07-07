@@ -1,0 +1,17 @@
+{
+  "com.liferay.client.extension.type.configuration.CETConfiguration~mmr-client-extension" : {
+    ":configurator:policy" : "force",
+    "baseURL" : "${portalURL}/o/mmr-client-extension",
+    "buildTimestamp" : 1730756826733,
+    "description" : "",
+    "dxp.lxc.liferay.com.virtualInstanceId" : "default",
+    "name" : "Model-Maker Recognition",
+    "projectId" : "mmrclientextension",
+    "projectName" : "mmr-client-extension",
+    "properties" : [ ],
+    "sourceCodeURL" : "",
+    "type" : "customElement",
+    "typeSettings" : [ "instanceable=false", "urls=js\\main.2111e166.js", "useESM=true", "htmlElementName=mmr-client-extension", "cssURLs=css\\main.27c07f35.css", "portletCategoryName=category.client-extensions" ],
+    "webContextPath" : "/mmr-client-extension"
+  }
+}

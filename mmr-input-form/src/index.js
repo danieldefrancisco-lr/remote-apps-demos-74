@@ -1,18 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AppClay from './components/AppClay';
+import MMRApiClient from './components/MMRApiClient';
 import './common/styles/index.scss';
 
 class WebComponent extends HTMLElement {
 	connectedCallback() {
-		const channelId=this.getAttribute("channelId");
+		const apikey=this.getAttribute("apiKey");
+		const serverUrl=this.getAttribute("serverUrl");
 		ReactDOM.render(
-			<AppClay channelId={channelId}/>,
+			<MMRApiClient apikey={apikey} />,
 			this
 		);
 	}
 }
-const ELEMENT_ID = 'create-orders-form';
+const ELEMENT_ID = 'mmr-input-form';
 if (!customElements.get(ELEMENT_ID)) {
 	customElements.define(ELEMENT_ID, WebComponent);
 }
