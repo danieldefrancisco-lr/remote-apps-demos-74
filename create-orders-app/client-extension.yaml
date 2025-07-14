@@ -1,0 +1,14 @@
+assemble:
+    - from: build/static
+      into: static
+create-orders-app:
+    cssURLs:
+        - css/main.*.css
+    htmlElementName: create-orders-app
+    instanceable: false
+    name: Create Orders App
+    portletCategoryName: category.client-extensions
+    type: customElement
+    urls:
+        - js/main.*.js
+    useESM: true

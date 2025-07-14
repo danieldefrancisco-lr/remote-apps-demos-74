@@ -11,6 +11,7 @@ const {Liferay, themeDisplay} = window;
 
 
 function AppClay(props) {
+	console.log(props);
 	const [account, setAccount] = useState("");
 	const [accounts, setAccounts] = useState([]);
     const [skuERC, setSkuERC] = useState("");
@@ -50,24 +51,27 @@ function AppClay(props) {
 
 	
 
-	const addOrderItems = (newOrderId,skuERC,units) => {
-		Liferay.Util.fetch("/o/headless-commerce-admin-catalog/v1.0/skus/by-externalReferenceCode/"+skuERC)
+	const addOrderItems = async (newOrderId,skuERC,units) => {
+		const response = await Liferay.Util.fetch("/o/headless-commerce-admin-catalog/v1.0/skus/by-externalReferenceCode/"+skuERC)
 			    .then((response) => response.json())
 			    .then((data) => {
+
+				let parsedUnits = parseFloat(units);
+				let parsedPrice = parseFloat(data.price);
 				
 			//	data.items.forEach((element) => {
 					Liferay.Util.fetch("/o/headless-commerce-admin-order/v1.0/orders/"+newOrderId+"/orderItems", {
 						body: JSON.stringify({
-							decimalQuantity: units,
+							decimalQuantity: parsedUnits,
 							externalReferenceCode: "item-from-app-"+generateUniqueCode(),
-							finalPrice : data.price * units,
-							finalPriceWithTaxAmount : data.price * units,
+							finalPrice : parsedPrice * parsedUnits,
+							finalPriceWithTaxAmount : parsedPrice * parsedUnits,
 							orderId: newOrderId,
-							quantity : units,
+							quantity : parsedUnits,
 							sku : data.sku,
 							skuExternalReferenceCode : skuERC,
-							unitPrice: data.price,
-							unitPriceWithTaxAmount: data.price
+							unitPrice: parsedPrice,
+							unitPriceWithTaxAmount: parsedPrice
 						  }),
 						method: 'POST',
 						headers: [
@@ -77,29 +81,33 @@ function AppClay(props) {
 					})
 				//});
 			});
+			const data = await response.json();
 	}
 
 
-	const addRandomOrderItems = (newOrderId,skuERC,units) => {
-		Liferay.Util.fetch("/o/headless-commerce-admin-catalog/v1.0/skus")
+	const addRandomOrderItems = async (newOrderId,skuERC,units) => {
+		const response = await Liferay.Util.fetch("/o/headless-commerce-admin-catalog/v1.0/skus")
 			    .then((response) => response.json())
 			    .then((data) => {
 				for (let i = 0; i < 3 ; i++) {
 					let randomSku = data.items.get(getRandomNumber(1,data.length));
+					// --- Convertir a números ANTES de usarlos ---
+					let parsedUnits = parseFloat(units);
+					let parsedPrice = parseFloat(randomSku.price);
 				
 			//	data.items.forEach((element) => {
 					Liferay.Util.fetch("/o/headless-commerce-admin-order/v1.0/orders/"+newOrderId+"/orderItems", {
 						body: JSON.stringify({
-							decimalQuantity: units,
+							decimalQuantity: parsedUnits,
 							externalReferenceCode: "item-from-app-"+generateUniqueCode(),
-							finalPrice : randomSku.price * units,
-							finalPriceWithTaxAmount : randomSku.price * units,
+							finalPrice : parsedPrice * parsedUnits,
+							finalPriceWithTaxAmount : parsedPrice * parsedUnits,
 							orderId: newOrderId,
-							quantity : units,
+							quantity : parsedUnits,
 							sku : randomSku.sku,
 							skuExternalReferenceCode : randomSku.externalReferenceCode,
-							unitPrice: randomSku.price,
-							unitPriceWithTaxAmount: randomSku.price
+							unitPrice: parsedPrice,
+							unitPriceWithTaxAmount: parsedPrice
 						  }),
 						method: 'POST',
 						headers: [
@@ -110,6 +118,7 @@ function AppClay(props) {
 				//});
 				}
 			});
+			const data = await response.json();
 	}
 
 	async function setOrderTotal() {
@@ -118,6 +127,7 @@ function AppClay(props) {
 		  const data = await response.json();
 		  if (response.status === 200) {
 		  setOrderTotalSum(data.price * units);
+		  console.log("Total Order Price:"+orderTotalSum);
 		  createOrders();
 		  }  else {
 			setMessage("Some error occured");
@@ -151,8 +161,8 @@ function AppClay(props) {
 		})
 		let resJson = await res.json();
       			if (res.status === 200) {
-					addOrderItems(resJson.id,skuERC,units);
-					addRandomOrderItems(resJson.id,skuERC,units);
+					await addOrderItems(resJson.id,skuERC,units);
+					await addRandomOrderItems(resJson.id,skuERC,units);
         			setMessage("Orders created successfully");
      			 } else {
        				 setMessage("Some error occured");
@@ -265,6 +275,11 @@ function AppClay(props) {
 				aria-label="Account" 
 				id="account"
 				onChange={(e) => setAccount(e.target.value)}>
+					<ClaySelect.Option
+         					key="0"
+          					label="Select an account"
+         					value="0"
+        					/>
 						{
 						accounts.map((opts,i)=>
 							<ClaySelect.Option

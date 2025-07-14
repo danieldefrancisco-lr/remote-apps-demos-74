@@ -12,7 +12,7 @@ class WebComponent extends HTMLElement {
 		);
 	}
 }
-const ELEMENT_ID = 'create-orders-form';
+const ELEMENT_ID = 'create-orders-app';
 if (!customElements.get(ELEMENT_ID)) {
 	customElements.define(ELEMENT_ID, WebComponent);
 }
