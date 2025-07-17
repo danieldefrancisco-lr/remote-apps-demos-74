@@ -5,30 +5,17 @@ import {ClaySelect} from '@clayui/form';
 import ClayForm, {ClayInput} from '@clayui/form';
 import ClayButton from '@clayui/button';
 
-
-
 const {Liferay, themeDisplay} = window;
-
 
 function AppClay(props) {
 	console.log(props);
 	const [account, setAccount] = useState("");
 	const [accounts, setAccounts] = useState([]);
-    const [skuERC, setSkuERC] = useState("");
-    const [units, setUnits] = useState("");
     const [numberOfOrders, setNumberOfOrders] = useState("");
-	const [price, setPrice] = useState("");
-	const [orderTotalSum, setOrderTotalSum] = useState(0);
 	const [message, setMessage] = useState("");
 
-
-
-	
 	const pathThemeImages = Liferay.ThemeDisplay.getPathThemeImages();
 	const spritemap = `${pathThemeImages}/clay/icons.svg`;
-	
-
-
 
 	function generateUniqueCode() {
 		// Get current timestamp
@@ -48,125 +35,150 @@ function AppClay(props) {
 		return formattedDate;
 	}
 
+	async function createAddress() {
+		var response = await Liferay.Util.fetch("/o/headless-commerce-admin-account/v1.0/accounts/" + account + "/accountAddresses", {
+			body: JSON.stringify({
+				city: 'address-' + generateUniqueCode(),
+				countryISOCode: 'US',
+				defaultBilling: true,
+				defaultShipping: true,
+				description: 'description-' + generateUniqueCode(),
+				latitude: 0,
+				longitude: 0,
+				name: 'name-' + generateUniqueCode(),
+				regionISOCode: '',
+				street1: 'street1-' + generateUniqueCode(),
+				street2: 'street2-' + generateUniqueCode(),
+				street3: 'street3-' + generateUniqueCode(),
+				type: 2,
+				zip: getRandomNumber(10000, 100000),
+			}),
+			method: 'POST',
+			headers: [
+				['Content-type', 'application/json'],
+				['Accept', 'application/json']
+			],
+		});
 
-	
-
-	const addOrderItems = async (newOrderId,skuERC,units) => {
-		const response = await Liferay.Util.fetch("/o/headless-commerce-admin-catalog/v1.0/skus/by-externalReferenceCode/"+skuERC)
-			    .then((response) => response.json())
-			    .then((data) => {
-
-				let parsedUnits = parseFloat(units);
-				let parsedPrice = parseFloat(data.price);
-				
-			//	data.items.forEach((element) => {
-					Liferay.Util.fetch("/o/headless-commerce-admin-order/v1.0/orders/"+newOrderId+"/orderItems", {
-						body: JSON.stringify({
-							decimalQuantity: parsedUnits,
-							externalReferenceCode: "item-from-app-"+generateUniqueCode(),
-							finalPrice : parsedPrice * parsedUnits,
-							finalPriceWithTaxAmount : parsedPrice * parsedUnits,
-							orderId: newOrderId,
-							quantity : parsedUnits,
-							sku : data.sku,
-							skuExternalReferenceCode : skuERC,
-							unitPrice: parsedPrice,
-							unitPriceWithTaxAmount: parsedPrice
-						  }),
-						method: 'POST',
-						headers: [
-							['Content-type', 'application/json'],
-							['Accept', 'application/json']
-						],
-					})
-				//});
-			});
-			const data = await response.json();
+		return await response.json();
 	}
 
+	async function getSkus() {
+		var response = await Liferay.Util.fetch("/o/headless-commerce-admin-catalog/v1.0/skus");
 
-	const addRandomOrderItems = async (newOrderId,skuERC,units) => {
-		const response = await Liferay.Util.fetch("/o/headless-commerce-admin-catalog/v1.0/skus")
-			    .then((response) => response.json())
-			    .then((data) => {
-				for (let i = 0; i < 3 ; i++) {
-					let randomSku = data.items.get(getRandomNumber(1,data.length));
-					// --- Convertir a números ANTES de usarlos ---
-					let parsedUnits = parseFloat(units);
-					let parsedPrice = parseFloat(randomSku.price);
-				
-			//	data.items.forEach((element) => {
-					Liferay.Util.fetch("/o/headless-commerce-admin-order/v1.0/orders/"+newOrderId+"/orderItems", {
-						body: JSON.stringify({
-							decimalQuantity: parsedUnits,
-							externalReferenceCode: "item-from-app-"+generateUniqueCode(),
-							finalPrice : parsedPrice * parsedUnits,
-							finalPriceWithTaxAmount : parsedPrice * parsedUnits,
-							orderId: newOrderId,
-							quantity : parsedUnits,
-							sku : randomSku.sku,
-							skuExternalReferenceCode : randomSku.externalReferenceCode,
-							unitPrice: parsedPrice,
-							unitPriceWithTaxAmount: parsedPrice
-						  }),
-						method: 'POST',
-						headers: [
-							['Content-type', 'application/json'],
-							['Accept', 'application/json']
-						],
-					})
-				//});
+		return await response.json();
+	}
+
+	async function getWarehouses() {
+		var response = await Liferay.Util.fetch("/o/headless-commerce-admin-inventory/v1.0/warehouses");
+
+		return await response.json();
+	}
+
+	async function setShipmentStatusDelivered(shipment) {
+		var response = await Liferay.Util.fetch("/o/headless-commerce-admin-shipment/v1.0/shipments/" + shipment.id + "/status-delivered", {
+			method: 'POST',
+			headers: [
+				['Content-type', 'application/json'],
+				['Accept', 'application/json']
+			]
+		});
+
+		return await response.json();
+	}
+
+	async function createOrder(address, skus) {
+		let orderItems = [];
+		let orderTotal = 0;
+
+		for (let i = 0; i < 3 ; i++) {
+			let randomSku = skus.items.at(getRandomNumber(0, skus.items.length-1));
+			let quantity = getRandomNumber(1, 2);
+
+			let orderItemTotal = randomSku.price * quantity;
+
+			orderItems.push(
+				{
+					finalPrice: orderItemTotal,
+					unitPrice: randomSku.price,
+					quantity: quantity,
+					skuId: randomSku.id
 				}
-			});
-			const data = await response.json();
-	}
+			);
 
-	async function setOrderTotal() {
-		try {
-		  const response = await Liferay.Util.fetch(`/o/headless-commerce-admin-catalog/v1.0/skus/by-externalReferenceCode/${skuERC}`);
-		  const data = await response.json();
-		  if (response.status === 200) {
-		  setOrderTotalSum(data.price * units);
-		  console.log("Total Order Price:"+orderTotalSum);
-		  createOrders();
-		  }  else {
-			setMessage("Some error occured");
-  }
-		} catch (error) {
-		  console.error("Error fetching SKU data:", error);
+			orderTotal+=orderItemTotal;
 		}
-	  }
-
-
-	async function createOrders() {
-		try {
-			for (let i = 0; i < numberOfOrders ; i++) {
-			let res = await Liferay.Util.fetch("/o/headless-commerce-admin-order/v1.0/orders", {
+		
+		var response = await Liferay.Util.fetch("/o/headless-commerce-admin-order/v1.0/orders?nestedFields=orderItems", {
 			body: JSON.stringify({
 				accountId: account,
+				billingAddressId: address.id,
 				channelId: props.channelId,
 				createDate:getPastDate(),
-				currencyCode: "EUR",
+				currencyCode: "USD",
 				externalReferenceCode:  "order-from-app-"+generateUniqueCode(),
 				orderDate:getPastDate(),
+				orderItems: orderItems,
 				orderStatus : 0,
 				paymentStatus : 0,
-				total: orderTotalSum
-			  }),
+				shippingAddressId: address.id,
+				total: orderTotal
+			}),
+			method: 'POST',
+			headers: [
+				['Content-type', 'application/json'],
+				['Accept', 'application/json']
+			]
+		});
+
+		return await response.json();
+	}
+
+	async function createShipment(order) {
+		const warehouses = await getWarehouses();
+
+		let shipmentItems = [];
+
+		order.orderItems.forEach((orderItem) => {
+			const warehouse = warehouses.items.at(getRandomNumber(0, warehouses.items.length-1));
+
+			shipmentItems.push(
+				{
+					orderItemId: orderItem.id,
+					quantity: orderItem.quantity,
+					warehouseId: warehouse.id
+				});
+		});
+
+		const response = await Liferay.Util.fetch("/o/headless-commerce-admin-shipment/v1.0/shipments", {
+			body: JSON.stringify({
+				expectedDate: order.orderDate,
+				orderId: order.id,
+				shipmentItems: shipmentItems,
+				shippingAddressId: order.shippingAddressId,
+			}),
 			method: 'POST',
 			headers: [
 				['Content-type', 'application/json'],
 				['Accept', 'application/json']
 			],
 		})
-		let resJson = await res.json();
-      			if (res.status === 200) {
-					await addOrderItems(resJson.id,skuERC,units);
-					await addRandomOrderItems(resJson.id,skuERC,units);
-        			setMessage("Orders created successfully");
-     			 } else {
-       				 setMessage("Some error occured");
-    		  }
+
+		return await response.json();
+	}
+
+
+	async function createOrders() {
+		try {
+			const address = await createAddress();
+			const skus = await getSkus();
+
+			for (let i = 0; i < numberOfOrders ; i++) {
+				const order = await createOrder(address, skus);
+
+				const shipment = await createShipment(order);
+
+				setShipmentStatusDelivered(shipment);
 			}
     } catch (err) {
       console.log(err);
@@ -175,49 +187,9 @@ function AppClay(props) {
 
 	async function handleSubmit(event) {
 		event.preventDefault();
-		await setOrderTotal();
-		// Aquí puedes llamar a otra función después de que setOrderTotal haya terminado
-		//await createOrders();
+		await createOrders();
 	  }
 
-/*
-	let handleSubmit = async (e) => {
-		e.preventDefault();
-		await setOrderTotal();
-		try {
-			for (let i = 0; i < numberOfOrders ; i++) {
-			let res = await Liferay.Util.fetch("/o/headless-commerce-admin-order/v1.0/orders", {
-			body: JSON.stringify({
-				accountId: account,
-				channelId: props.channelId,
-				createDate:getPastDate(),
-				currencyCode: "EUR",
-				externalReferenceCode:  "order-from-app-"+generateUniqueCode(),
-				orderDate:getPastDate(),
-				orderStatus : 0,
-				paymentStatus : 0,
-				total: orderTotalSum
-			  }),
-			method: 'POST',
-			headers: [
-				['Content-type', 'application/json'],
-				['Accept', 'application/json']
-			],
-		})
-		let resJson = await res.json();
-      			if (res.status === 200) {
-					addOrderItems(resJson.id,skuERC,units);
-        			setMessage("Orders created successfully");
-     			 } else {
-       				 setMessage("Some error occured");
-    		  }
-			}
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-*/
 	const fetchAccounts = () => {
 		let availableAccounts = [];
 		Liferay.Util.fetch("/o/headless-admin-user/v1.0/accounts")
@@ -244,27 +216,6 @@ function AppClay(props) {
 			<div class="form-group-autofit">
 			<ClayForm id="create-orders-form" onSubmit={handleSubmit}>
 			<ClayForm.Group className="form-group-sm">
-			<ClayInput.Group>
-			<ClayInput.GroupItem>
-			  <label htmlFor="model">SKU ERC</label>
-			  <ClayInput 
-			  	id="skuERC" 
-			  	placeholder="skuERC" 
-				type="text" 
-				onChange={(e) => setSkuERC(e.target.value)}>
-			   </ClayInput>
-			</ClayInput.GroupItem>
-			<ClayInput.GroupItem>
-			  <label htmlFor="serialNumber">No Units</label>
-			  <ClayInput 
-			  	id="units" 
-				placeholder="units" 
-				type="text"
-				onChange={(e) => setUnits(e.target.value)}>
-			   </ClayInput>
-			</ClayInput.GroupItem>
-			
-			</ClayInput.Group>
 			</ClayForm.Group>
 			
 			<ClayForm.Group className="form-group-sm">
