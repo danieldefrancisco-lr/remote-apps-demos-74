@@ -12,6 +12,8 @@ function AppClay(props) {
 	const [account, setAccount] = useState("");
 	const [accounts, setAccounts] = useState([]);
     const [numberOfOrders, setNumberOfOrders] = useState("");
+	const [orderStatus, setOrderStatus] = useState("");
+	const [shipmentStatus, setShipmentStatus] = useState("");
 	const [message, setMessage] = useState("");
 
 	const pathThemeImages = Liferay.ThemeDisplay.getPathThemeImages();
@@ -87,6 +89,30 @@ function AppClay(props) {
 		return await response.json();
 	}
 
+	async function setShipmentStatusShipped(shipment) {
+		var response = await Liferay.Util.fetch("/o/headless-commerce-admin-shipment/v1.0/shipments/" + shipment.id + "/status-shipped", {
+			method: 'POST',
+			headers: [
+				['Content-type', 'application/json'],
+				['Accept', 'application/json']
+			]
+		});
+
+		return await response.json();
+	}
+
+	async function setShipmentStatusFinishProcessing(shipment) {
+		var response = await Liferay.Util.fetch("/o/headless-commerce-admin-shipment/v1.0/shipments/" + shipment.id + "/status-finish-processing", {
+			method: 'POST',
+			headers: [
+				['Content-type', 'application/json'],
+				['Accept', 'application/json']
+			]
+		});
+
+		return await response.json();
+	}
+
 	async function createOrder(address, skus) {
 		let orderItems = [];
 		let orderTotal = 0;
@@ -108,7 +134,9 @@ function AppClay(props) {
 
 			orderTotal+=orderItemTotal;
 		}
-		
+
+		let shippingAmount = 15.00;
+
 		var response = await Liferay.Util.fetch("/o/headless-commerce-admin-order/v1.0/orders?nestedFields=orderItems", {
 			body: JSON.stringify({
 				accountId: account,
@@ -119,10 +147,14 @@ function AppClay(props) {
 				externalReferenceCode:  "order-from-app-"+generateUniqueCode(),
 				orderDate:getPastDate(),
 				orderItems: orderItems,
-				orderStatus : 0,
+				orderStatus : orderStatus == 14 ? 10 : orderStatus,
 				paymentStatus : 0,
 				shippingAddressId: address.id,
-				total: orderTotal
+				shippingAmount: shippingAmount,
+				shippingMethod: 'fixed',
+				shippingOption: 'standard-delivery',
+				subtotal: orderTotal,
+				total: orderTotal + shippingAmount
 			}),
 			method: 'POST',
 			headers: [
@@ -167,6 +199,37 @@ function AppClay(props) {
 		return await response.json();
 	}
 
+	async function createPartialShipment(order) {
+		const warehouses = await getWarehouses();
+
+		let shipmentItems = [];
+
+		const warehouse = warehouses.items[getRandomNumber(0, warehouses.items.length-1)];
+
+		shipmentItems.push(
+			{
+				orderItemId: order.orderItems[0].id,
+				quantity: order.orderItems[0].quantity,
+				warehouseId: warehouse.id
+			});
+
+		const response = await Liferay.Util.fetch("/o/headless-commerce-admin-shipment/v1.0/shipments", {
+			body: JSON.stringify({
+				expectedDate: order.orderDate,
+				orderId: order.id,
+				shipmentItems: shipmentItems,
+				shippingAddressId: order.shippingAddressId,
+			}),
+			method: 'POST',
+			headers: [
+				['Content-type', 'application/json'],
+				['Accept', 'application/json']
+			],
+		})
+
+		return await response.json();
+	}
+
 
 	async function createOrders() {
 		try {
@@ -176,9 +239,29 @@ function AppClay(props) {
 			for (let i = 0; i < numberOfOrders ; i++) {
 				const order = await createOrder(address, skus);
 
-				const shipment = await createShipment(order);
+				if (orderStatus == 0) {
+					const shipment = await createShipment(order);
 
-				setShipmentStatusDelivered(shipment);
+					setShipmentStatusDelivered(shipment);
+				}
+				else if (orderStatus == 10) {
+					const shipment = await createShipment(order);
+
+					if (shipmentStatus == 1) {
+						setShipmentStatusFinishProcessing(shipment);
+					}
+					else if (shipmentStatus == 2) {
+						setShipmentStatusShipped(shipment);
+					}
+					else if (shipmentStatus == 3) {
+						setShipmentStatusDelivered(shipment);
+					}
+				}
+				else if (orderStatus == 14) {
+					const shipment = await createPartialShipment(order);
+
+					setShipmentStatusDelivered(shipment);
+				}
 			}
     } catch (err) {
       console.log(err);
@@ -240,6 +323,82 @@ function AppClay(props) {
         					/>
 						)
 						}
+			</ClaySelect>
+			</ClayInput.GroupItem>
+			</ClayInput.Group>
+			</ClayForm.Group>
+
+			<ClayForm.Group className="form-group-sm">
+			<ClayInput.Group>
+			<ClayInput.GroupItem>
+			<label htmlFor="orderStatus">Order Status</label>
+			<ClaySelect
+				aria-label="Order Status"
+				id="orderStatus"
+				onChange={(e) => setOrderStatus(e.target.value)}>
+					<ClaySelect.Option
+						key="10"
+						label="Processing"
+						value="10"
+					/>
+					<ClaySelect.Option
+						key="1"
+						label="Pending"
+						value="1"
+					/>
+					<ClaySelect.Option
+						key="8"
+						label="Cancel"
+						value="8"
+					/>
+					<ClaySelect.Option
+						key="20"
+						label="Holding"
+						value="20"
+					/>
+					<ClaySelect.Option
+						key="14"
+						label="Partially Shipped"
+						value="14"
+					/>
+					<ClaySelect.Option
+						key="0"
+						label="Completed"
+						value="0"
+					/>
+			</ClaySelect>
+			</ClayInput.GroupItem>
+			</ClayInput.Group>
+			</ClayForm.Group>
+
+			<ClayForm.Group className="form-group-sm">
+			<ClayInput.Group>
+			<ClayInput.GroupItem>
+			<label htmlFor="shipmentStatus">Shipment Status(Only applys for order status Processing)</label>
+			<ClaySelect
+				aria-label="Shipment Status"
+				id="shipmentStatus"
+				onChange={(e) => setShipmentStatus(e.target.value)}>
+					<ClaySelect.Option
+						key="0"
+						label="Processing"
+						value="0"
+					/>
+					<ClaySelect.Option
+						key="1"
+						label="Ready to Ship"
+						value="1"
+					/>
+					<ClaySelect.Option
+						key="2"
+						label="Shipped"
+						value="2"
+					/>
+					<ClaySelect.Option
+						key="3"
+						label="Delivered"
+						value="3"
+					/>
 			</ClaySelect>
 			</ClayInput.GroupItem>
 			</ClayInput.Group>
